@@ -1,13 +1,14 @@
 # backend/Dockerfile
 FROM python:3.10-slim
 
-WORKDIR /app/backend
+WORKDIR /app
 
-COPY requirements.txt /app/backend/
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/backend/
+COPY backend/ .
 
-EXPOSE 8000
+# ← AÑADE ESTO
+RUN python manage.py collectstatic --noinput
 
 CMD ["sh", "-c", "python manage.py migrate && gunicorn crm.wsgi:application --bind 0.0.0.0:$PORT"]
