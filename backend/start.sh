@@ -1,6 +1,6 @@
 # backend/start.sh
 #!/bin/sh
 set -e
-DEFAULT_PORT=${PORT:-8000}
+
 python manage.py migrate
-exec gunicorn crm.wsgi:application --bind 0.0.0.0:$DEFAULT_PORT
+exec gunicorn crm.wsgi:application --bind 0.0.0.0:$PORT
