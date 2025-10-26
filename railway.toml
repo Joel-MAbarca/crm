@@ -3,8 +3,8 @@
   dockerfilePath = "backend/Dockerfile"
 
 [deploy]
-  startCommand = "gunicorn crm.wsgi:application --bind 0.0.0.0:$PORT"
+  startCommand = "/start.sh"
 
 [env]
-  DJANGO_SECRET_KEY = "super-secret-key"
+  DJANGO_SECRET_KEY = "wvt&yv34ghyqcvhr3ikxqnoz821)1s2xgibkpm-y)wt_svwe@e"
   DEBUG = "False"
