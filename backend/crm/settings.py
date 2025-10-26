@@ -5,8 +5,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-DJANGO_SECRET_KEY = 'wvt&yv34ghyqcvhr3ikxqnoz821)1s2xgibkpm-y)wt_svwe@e'
-DEBUG = 'False'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key-for-dev')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']  # Railway da subdominio dinámico
 
