@@ -5,7 +5,7 @@ ARG VITE_API_URL
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
-COPY frontend/.env.production.local . # Copiaremos cualquier archivo .env local si existe
+COPY frontend/.env.production.local .
 
 RUN npm install
 
