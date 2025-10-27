@@ -9,5 +9,7 @@ COPY backend/ .
 
 RUN python manage.py collectstatic --noinput
 
+RUN chmod +x /app/start.sh
+
 CMD ["/bin/sh", "-c", "python manage.py migrate && gunicorn crm.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
 
