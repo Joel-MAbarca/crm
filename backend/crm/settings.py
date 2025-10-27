@@ -48,18 +48,24 @@ WSGI_APPLICATION = 'crm.wsgi.application'
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
-    # Si la URL existe, usa dj-database-url para parsearla y configurarla.
+    # Configuración de Producción (Railway)
+    # Usa dj_database_url para parsear la URL de PostgreSQL.
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
+    # Desactivamos el filtro de host si estamos en producción
+    ALLOWED_HOSTS = ['*']
+    CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
+
 else:
-    # Configuración de desarrollo local (SQLite por defecto si no hay URL)
+    # Configuración de Desarrollo Local (SQLite)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
