@@ -10,12 +10,5 @@ COPY backend/ .
 
 RUN python manage.py collectstatic --noinput
 
-COPY backend/start.sh /start.sh
+CMD ["/bin/sh", "-c", "python manage.py migrate && gunicorn crm.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
 
-RUN apt-get update && apt-get install -y dos2unix && \
-    dos2unix /start.sh
-
-RUN chmod +x /start.sh
-
-# USA EL SCRIPT
-CMD ["/start.sh"]
