@@ -68,8 +68,7 @@ if DATABASE_URL:
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
 
-    ALLOWED_HOSTS = ['*']
-    CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
+    CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
 
 else:
 
