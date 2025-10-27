@@ -1,15 +1,16 @@
-
 FROM node:18-alpine
+
+ARG VITE_API_URL
 
 WORKDIR /app/frontend
 
-COPY package*.json /app/frontend/
+COPY frontend/package*.json ./
+COPY frontend/.env.production.local . # Copiaremos cualquier archivo .env local si existe
+
 RUN npm install
 
-COPY . /app/frontend/
+COPY frontend/ .
 
-RUN npm run build
+RUN VITE_API_URL=$VITE_API_URL npm run build
 
-EXPOSE 3000
-
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "3000"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "${PORT:-3000}"]
