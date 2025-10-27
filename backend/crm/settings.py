@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key-for-dev')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']  # Railway da subdominio dinámico
+ALLOWED_HOSTS = ['*']
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
@@ -42,24 +42,37 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'crm.urls'
 
-TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [], 'APP_DIRS': True}]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 WSGI_APPLICATION = 'crm.wsgi.application'
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
-    # Configuración de Producción (Railway)
-    # Usa dj_database_url para parsear la URL de PostgreSQL.
+
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
-    # Desactivamos el filtro de host si estamos en producción
+
     ALLOWED_HOSTS = ['*']
     CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 
 else:
-    # Configuración de Desarrollo Local (SQLite)
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
