@@ -3,6 +3,22 @@ import { Form, Button, Container, Card, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+// SOLUCIÓN DEFINITIVA: 
+// Para evitar la advertencia de 'es2015' y asegurar que la variable se resuelva en Vite/Railway,
+// creamos una función para obtener el valor dinámicamente.
+const getApiUrl = () => {
+  // Verificamos si import.meta está disponible (ambiente Vite)
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // Fallback si la sintaxis import.meta no es reconocida (aunque no debería ocurrir en un build de Vite)
+  return undefined; 
+};
+
+const VITE_API_URL = getApiUrl();
+const API_BASE_URL = VITE_API_URL || 'http://localhost:8000';
+const LOGIN_URL = `${API_BASE_URL}/api/auth/login/`;
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,15 +27,28 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Limpiar errores anteriores
+    
+    // Pequeño chequeo de debug para confirmar que la URL se está usando correctamente
+    console.log("Intentando iniciar sesión en:", LOGIN_URL);
+
     try {
-      const res = await axios.post('http://localhost:8000/api/auth/login/', {
+      // Usar la URL dinámica
+      const res = await axios.post(LOGIN_URL, {
         email,
         password
       });
+      
+      // Manejo de tokens y navegación
       localStorage.setItem('access_token', res.data.access);
       navigate('/dashboard');
     } catch (err) {
-      setError('Credenciales inválidas');
+      // Manejo de errores más específico, capturando el detalle del backend
+      const message = err.response?.data?.detail 
+                      ? `Error: ${err.response.data.detail}` 
+                      : 'Credenciales inválidas o error de conexión. Verifique la URL de la API.';
+      setError(message);
+      console.error("Error de login:", err);
     }
   };
 
